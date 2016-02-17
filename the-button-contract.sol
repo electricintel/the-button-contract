@@ -29,7 +29,7 @@ contract TheButton {
             Status = status.started;
             return;
         } 
-        else if (Status == status.started && now < deadline ){
+        else if (Status == status.started && now < deadline  && msg.value >= minvalue && msg.value <= maxvalue){
             deadline = block.number + 20;
             winner = msg.sender;    
             return;
