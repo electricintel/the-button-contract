@@ -19,8 +19,7 @@ contract TheButton {
     }
     
     // Any deposit to the contract address with or without data calls
-    // to the non named function. This function returns an integer for
-    // show info or errors at the front-end.
+    // to the non named function. 
     function () {
         // Start the game with the first deposit
         if ( Status == status.standby  && msg.value >= minvalue && msg.value <= maxvalue ){                           
