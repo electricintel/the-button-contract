@@ -32,14 +32,20 @@ contract TheButton {
         maxvalue = _maxvalue;
     }
     
-    function SendWinnerPayout() private{
+    function SendWinnerPayout() returns(boolean) private{
             winner = gamer;
              // Send all the current balance to winner.
-            winner.send(this.balance);
-            // Set contract to "ended" status.
-            Status = status.ended;
-            // Event for detect when finished
-            TheButtonEnds(winner, deadline, block.number);
+            if (winner.send(this.balance)){
+                // Set contract to "ended" status.
+                Status = status.ended;
+                // Event for detect when finished
+                TheButtonEnds(winner, deadline, block.number);
+                return true;
+            }
+            else{
+                throw;
+            }
+            return false;
     }
     
     function NewGamer(address _gamer, uint256 amount) private{
@@ -49,12 +55,15 @@ contract TheButton {
     }
     
     // Check when the time ends, could be called by ethereum alarm clock
-    function CheckExpired() returns (bool){
+    function CheckExpired() returns (boolean){
         bool expired = false;
-        if ( Status == status.started && block.number >= deadline ){
-            SendWinnerPayout();
-            expired = true;
-            return expired;
+        if ( Status == status.started && block.number >= deadline){
+            if(SendWinnerPayout()){
+                expired = true;
+            }
+            else{
+                throw;
+            }
         }
         return expired;
     }
